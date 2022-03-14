@@ -1,16 +1,25 @@
-const launches = new Map();
+const launches = require("./launches.mongo");
 
 let latestFlightNumber = 100;
 
-function getAllLaunches() {
-  return Array.from(launches.values());
+async function getAllLaunches() {
+  return launches.find({}, { _id: 0, __v: 0 });
 }
 
-function addNewLaunch(launch) {
+async function saveLaunch(launch) {
+  await launches.updateOne(
+    {
+      flightNumber: launch.flightNumber,
+    },
+    launch,
+    { upsert: true }
+  );
+}
+
+async function addNewLaunch(launch) {
   latestFlightNumber++;
 
-  launches.set(
-    latestFlightNumber,
+  await saveLaunch(
     Object.assign(launch, {
       flightNumber: latestFlightNumber,
       customers: ["ZTM", "NASA"],
@@ -23,6 +32,7 @@ function addNewLaunch(launch) {
 function hasLaunch(flightNumber) {
   return !!launches.has(flightNumber);
 }
+
 function deleteLaunch(flightNumber) {
   const deletedLaunch = launches.get(flightNumber);
 
