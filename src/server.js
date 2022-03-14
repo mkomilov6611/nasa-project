@@ -1,6 +1,8 @@
 const { createServer } = require("http");
 const mongoose = require("mongoose");
 
+const { loadPlanetsData } = require("./models/planets.model");
+
 const app = require("./app");
 const server = createServer(app);
 
@@ -21,17 +23,19 @@ mongoose.connection.on("error", (error) => {
 
 async function startServer() {
   try {
+    await loadPlanetsData();
+
     await mongoose.connect(MONGO_URL, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-  } catch (error) {
-    console.error(error.reason);
-  }
 
-  server.listen(PORT, () => {
-    console.log("Listening on port " + PORT + "...");
-  });
+    server.listen(PORT, () => {
+      console.log("Listening on port " + PORT + "...");
+    });
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 startServer();
