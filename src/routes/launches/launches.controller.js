@@ -1,7 +1,7 @@
 const {
   hasLaunch,
   getAllLaunches,
-  addNewLaunch,
+  scheduleNewLaunch,
   deleteLaunch,
 } = require("../../models/launches.model.js");
 
@@ -17,7 +17,7 @@ async function httpGetAllLaunches(req, res) {
 
 async function httpAddNewLaunch(req, res) {
   const launch = req.body;
-  // Needs Validation
+
   if (
     !launch.mission ||
     !launch.rocket ||
@@ -37,23 +37,38 @@ async function httpAddNewLaunch(req, res) {
     });
   }
 
-  await addNewLaunch(launch);
+  try {
+    await scheduleNewLaunch(launch);
 
-  return res
-    .status(201)
-    .json({ message: "Launch is successfully added", launch });
+    return res
+      .status(201)
+      .json({ message: "Launch is successfully added", launch });
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
 }
 
-function httpDeleteLaunch(req, res) {
+async function httpDeleteLaunch(req, res) {
   const flightNumber = Number(req.params.flightNumber);
+  const existsLaunch = await hasLaunch(flightNumber);
 
-  if (!hasLaunch(flightNumber)) {
+  if (!existsLaunch) {
     return res.status(404).json({
-      message: "Missing flight number",
+      error: "Missing flight number",
     });
   }
 
-  return res.status(200).json(deleteLaunch(flightNumber));
+  const deletedLaunch = await deleteLaunch(flightNumber);
+
+  if (!deletedLaunch) {
+    return res.status(400).json({
+      error: "Launch not deleted",
+    });
+  }
+
+  return res.status(200).json({
+    message: "Launch is deleted",
+  });
 }
 
 module.exports = {
