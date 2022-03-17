@@ -4,17 +4,6 @@ const { parse } = require("csv-parse");
 
 const planets = require("./planets.mongo");
 
-function isHabitablePlanet(planet) {
-  const { koi_disposition, koi_insol, koi_prad } = planet;
-
-  return (
-    koi_disposition === "CONFIRMED" &&
-    koi_insol > 0.36 &&
-    koi_insol < 1.11 &&
-    koi_prad < 1.6
-  );
-}
-
 function loadPlanetsData() {
   return new Promise((res, rej) => {
     fs.createReadStream(
@@ -32,7 +21,6 @@ function loadPlanetsData() {
           await savePlanet(data);
         })
         .on("error", (err) => {
-          console.log("ERROR", err);
           rej(err);
         })
         .on("end", () => {
@@ -42,19 +30,15 @@ function loadPlanetsData() {
   });
 }
 
-async function getAllPlanets() {
-  try {
-    return planets.find(
-      {},
-      {
-        _id: 0,
-        keplerName: 1,
-      }
-    );
-  } catch (error) {
-    console.error("Could not retrieve planets: " + error);
-    throw error;
-  }
+function isHabitablePlanet(planet) {
+  const { koi_disposition, koi_insol, koi_prad } = planet;
+
+  return (
+    koi_disposition === "CONFIRMED" &&
+    koi_insol > 0.36 &&
+    koi_insol < 1.11 &&
+    koi_prad < 1.6
+  );
 }
 
 async function savePlanet(planet) {
@@ -72,6 +56,21 @@ async function savePlanet(planet) {
     );
   } catch (error) {
     console.error("Could not save the planet: " + error);
+  }
+}
+
+async function getAllPlanets() {
+  try {
+    return planets.find(
+      {},
+      {
+        _id: 0,
+        keplerName: 1,
+      }
+    );
+  } catch (error) {
+    console.error("Could not retrieve planets: " + error);
+    throw error;
   }
 }
 

@@ -19,7 +19,10 @@ describe("Launches API", () => {
 
   describe("Test GET /launches", () => {
     test("It should respond with 200 success code", async () => {
-      await server.get("/launches").expect("Content-Type", /json/).expect(200);
+      await server
+        .get("/v1/launches")
+        .expect("Content-Type", /json/)
+        .expect(200);
     });
   });
 
@@ -39,7 +42,7 @@ describe("Launches API", () => {
 
     test("It should respond with 201 created code", async () => {
       const response = await server
-        .post("/launches")
+        .post("/v1/launches")
         .send(payload)
         .expect("Content-Type", /json/)
         .expect(201);
@@ -55,7 +58,7 @@ describe("Launches API", () => {
 
     test("It should catch missing required props", async () => {
       const response = await server
-        .post("/launches")
+        .post("/v1/launches")
         .send(payloadWithoutDate)
         .expect("Content-Type", /json/)
         .expect(400);
@@ -67,7 +70,7 @@ describe("Launches API", () => {
 
     test("It should catch invalid date", async () => {
       const response = await server
-        .post("/launches")
+        .post("/v1/launches")
         .send({ ...payload, launchDate: "Saturday" })
         .expect("Content-Type", /json/)
         .expect(400);
@@ -79,27 +82,27 @@ describe("Launches API", () => {
   });
 
   describe("Test DELETE /launches/:flightNumber", () => {
-    const invalidFlightNumber = 99;
+    const invalidFlightNumber = -11;
     const deletedFlightNumber = 101;
-    const flightNumber = 104; // Should be switched to other after deletion
+    const flightNumber = 110; // Should be switched to other after deletion
 
     test("It should respond with 404 error code", async () => {
       await server
-        .delete("/launches/" + invalidFlightNumber)
+        .delete("/v1/launches/" + invalidFlightNumber)
         .expect("Content-Type", /json/)
         .expect(404);
     });
 
     test("It should respond with 400 error code", async () => {
       await server
-        .delete("/launches/" + deletedFlightNumber)
+        .delete("/v1/launches/" + deletedFlightNumber)
         .expect("Content-Type", /json/)
-        .expect(200);
+        .expect(400);
     });
 
     test("It should respond with 200 success code", async () => {
       await server
-        .delete("/launches/" + flightNumber)
+        .delete("/v1/launches/" + flightNumber)
         .expect("Content-Type", /json/)
         .expect(200);
     });
