@@ -16,18 +16,13 @@ const spaceXClient = axios.create({
 });
 
 async function loadLaunchesData() {
-  const sampleLeftLaunch = await findLaunch({
+  const sampleLaunch = await findLaunch({
     flightNumber: 1,
     rocket: "Falcon 1",
     mission: "FalconSat",
   });
-  const sampleRightLaunch = await findLaunch({
-    flightNumber: 155,
-    rocket: "Falcon 9",
-    mission: "Ax-1",
-  });
 
-  if (sampleLeftLaunch && sampleRightLaunch) {
+  if (sampleLaunch) {
     console.log("LAUNCH DATA already loaded");
     return;
   }
