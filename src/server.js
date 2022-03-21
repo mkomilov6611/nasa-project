@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 6611;
 async function startServer() {
   try {
     await connectMongo();
-    await loadPlanetsData();
+    // await loadPlanetsData();
     await loadLaunchesData();
 
     server.listen(PORT, () => {
