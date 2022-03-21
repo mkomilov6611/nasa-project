@@ -6,6 +6,7 @@ const {
 } = require("../../services/mongo.service");
 
 const { loadPlanetsData } = require("../../models/planets.model");
+const { loadLaunchesData } = require("../../models/launches.model");
 
 const app = require("../../app");
 const server = supertest(app);
@@ -14,6 +15,7 @@ describe("Launches API", () => {
   beforeAll(async () => {
     await connectMongo();
     await loadPlanetsData();
+    await loadLaunchesData();
   });
 
   afterAll(async () => {
