@@ -7,16 +7,23 @@ on:
 
 jobs:
   build:
+    env:
+      CI: true
+      MONGO_CLUSTER_URL: mongodb+srv://mkomilov6611:Am9yvCSdHPRBYNXz@nasamongocluster.kkt18.mongodb.net/nasa-database?retryWrites=true&w=majority
+
+    strategy:
+      matrix:
+        node-version: ["14.x", "16.x"]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout to the branch
         uses: actions/checkout@v2
 
-      - name: Setup Node.js
+      - name: Setup Node.js Version ${{matrix.node-version}}
         uses: actions/setup-node@v2
         with:
-          node-version: "16"
+          node-version: ${{matrix.node-version}}
 
       - run: npm install
-
+      - run: npm test
       - run: npm run start
