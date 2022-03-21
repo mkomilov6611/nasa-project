@@ -9,11 +9,12 @@ jobs:
   build:
     env:
       CI: true
-      MONGO_CLUSTER_URL: mongodb+srv://mkomilov6611:Am9yvCSdHPRBYNXz@nasamongocluster.kkt18.mongodb.net/nasa-database?retryWrites=true&w=majority
+      MONGO_URL: mongodb://localhost:27017/nasa-database
 
     strategy:
       matrix:
         node-version: [14.x, 16.x]
+        mongo-version: ["4.4"]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout to the branch
@@ -23,6 +24,11 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{matrix.node-version}}
+
+      - name: MongoDB in GitHub Actions
+        uses: supercharge/mongodb-github-action@1.7.0
+        with:
+          mongo-version: ${{matrix.mongo-version}}
 
       - run: npm install
       - run: npm test
