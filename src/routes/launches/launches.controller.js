@@ -5,9 +5,14 @@ const {
   deleteLaunch,
 } = require("../../models/launches.model.js");
 
+const { getPagination } = require("../../services/query.service");
+
 async function httpGetAllLaunches(req, res) {
   try {
-    return res.status(200).json(await getAllLaunches());
+    const options = getPagination(req.query);
+    const launches = await getAllLaunches(options);
+
+    return res.status(200).json(launches);
   } catch (error) {
     res.status(500).json({
       error: "Could not retrieve data",
@@ -54,7 +59,7 @@ async function httpDeleteLaunch(req, res) {
 
   if (!existsLaunch) {
     return res.status(404).json({
-      error: "Missing flight number",
+      error: "No such flight number exist",
     });
   }
 
