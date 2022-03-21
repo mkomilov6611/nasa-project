@@ -10,9 +10,9 @@ const httpsAgent = new HttpsProxyAgent({
 });
 
 const spaceXClient = axios.create({
-  httpsAgent,
+  // httpsAgent,
   baseURL: "https://api.spacexdata.com/v4",
-  timeout: 30000,
+  timeout: 10000,
 });
 
 async function loadLaunchesData() {
