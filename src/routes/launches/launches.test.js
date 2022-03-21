@@ -5,12 +5,15 @@ const {
   disconnectMongo,
 } = require("../../services/mongo.service");
 
+const { loadPlanetsData } = require("../../models/launches.model");
+
 const app = require("../../app");
 const server = supertest(app);
 
 describe("Launches API", () => {
   beforeAll(async () => {
     await connectMongo();
+    await loadPlanetsData();
   });
 
   afterAll(async () => {
