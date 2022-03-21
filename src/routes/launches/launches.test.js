@@ -5,7 +5,7 @@ const {
   disconnectMongo,
 } = require("../../services/mongo.service");
 
-const { loadPlanetsData } = require("../../models/launches.model");
+const { loadPlanetsData } = require("../../models/planets.model");
 
 const app = require("../../app");
 const server = supertest(app);
