@@ -1,4 +1,5 @@
 const supertest = require("supertest");
+require("dotenv").config();
 
 const {
   connectMongo,
@@ -83,21 +84,13 @@ describe("Launches API", () => {
 
   describe("Test DELETE /launches/:flightNumber", () => {
     const invalidFlightNumber = -11;
-    const deletedFlightNumber = 101;
-    const flightNumber = 110; // Should be switched to other after deletion
+    const flightNumber = Math.floor(Math.random() * 150);
 
     test("It should respond with 404 error code", async () => {
       await server
         .delete("/v1/launches/" + invalidFlightNumber)
         .expect("Content-Type", /json/)
         .expect(404);
-    });
-
-    test("It should respond with 400 error code", async () => {
-      await server
-        .delete("/v1/launches/" + deletedFlightNumber)
-        .expect("Content-Type", /json/)
-        .expect(400);
     });
 
     test("It should respond with 200 success code", async () => {
